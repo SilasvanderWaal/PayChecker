@@ -1,0 +1,19 @@
+# docker-compose.yml sketch
+services:
+  web:
+    build: ./docker/flask
+    env_file: .env
+    depends_on: [db]
+    volumes:
+      - .:/app
+    ports: ["5000:5000"]
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: worktrack
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
