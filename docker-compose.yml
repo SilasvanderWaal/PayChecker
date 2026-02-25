@@ -1,19 +1,38 @@
-# docker-compose.yml sketch
 services:
   web:
-    build: ./docker/flask
+    build:
+      context: .
+      dockerfile: docker/flask/Dockerfile
     env_file: .env
-    depends_on: [db]
+    environment:
+      FLASK_APP: app
+      FLASK_ENV: ${FLASK_ENV}
+    ports:
+      - "5000:5000"
     volumes:
-      - .:/app
-    ports: ["5000:5000"]
+      - .:/app:z
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
 
   db:
     image: mysql:8.0
+    env_file: .env
     environment:
-      MYSQL_DATABASE: worktrack
+      MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:

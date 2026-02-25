@@ -1,36 +1,31 @@
+from flask import Flask
+from app.extensions import db, login_manager, csrf, bcrypt, migrate
+from app.config import config_by_name
+
 import os
 
-from flask import Flask
 
-def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-            SECRET_KEY='dev',
-            DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-            )
+def create_app():
+    app = Flask(__name__)
 
-    if test_config is None:
-        #load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        #load the test config if passed in
-        app.config.from_mapping(test_config)
+    env = os.getenv("FLASK_ENV", "development")
+    app.config.from_object(config_by_name[env])
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    @app.route("/hello/")
-    def hello():
-        return "Hello, World!"
-
-    from . import db
+    # Initialise extensions
     db.init_app(app)
+    login_manager.init_app(app)
+    csrf.init_app(app)
+    bcrypt.init_app(app)
+    migrate.init_app(app, db)
 
-    from . import auth
-    app.register_blueprint(auth.bp)
+    # Register blueprints
+    from app.auth import auth_bp
+    app.register_blueprint(auth_bp)
+
+    from flask import render_template
+
+    @app.route("/")
+    def dashboard():
+        return "Dashboard coming up!"
 
     return app

@@ -1,23 +1,23 @@
-<!doctype html>
-<title>{% block title %}{% endblock %} - flaskr </title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-    <ul>
-        {% if g.user %}
-            <li><span>{{ g.user['username'] }}</span>
-            <li><a href="{{ url_for('auth.logout') }}">Log out</a>
-        {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a>
-            <li><a href="{{ url_for('auth.login') }}">Login</a>
-        {% endif %}
-    </ul>
-</nav>
-<section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-    {% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayCheck</title>
+</head>
+
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }} </p>
+        {% endfor %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
-</section>
+</body>
+</html>
