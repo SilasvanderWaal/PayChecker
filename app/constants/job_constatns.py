@@ -1,0 +1,4 @@
+class JobConstants:
+    MAX_NAME_LENGTH = 150
+    MAX_CURRENCY_NAME_LENGTH = 10
+    MIN_HOURLY_RATE = 0.01

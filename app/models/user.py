@@ -15,5 +15,8 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
 
+    jobs = db.relationship("Job", backref="user", lazy=True)
+
     def __repr__(self):
         return f"<User {self.email}>"
+

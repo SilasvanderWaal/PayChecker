@@ -1,6 +1,7 @@
 from flask import Flask
 from app.extensions import db, login_manager, csrf, bcrypt, migrate
 from app.config import config_by_name
+import app.models
 
 import os
 
@@ -21,6 +22,9 @@ def create_app():
     # Register blueprints
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
+
+    from app.jobs import jobs_bp
+    app.register_blueprint(jobs_bp)
 
     from flask import render_template
 

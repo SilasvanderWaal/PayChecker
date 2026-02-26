@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }} {{ form.name() }}
+    {{ form.hourly_rate.label }} {{ form.hourly_rate() }}
+    {{ form.currency.label }} {{ form.currency() }}
+    {{ form.is_active.label }} {{ form.is_active() }}
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('jobs.index') }}">Cancel</a>
+{% endblock %}

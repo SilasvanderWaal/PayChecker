@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Jobs</h2>
+<a href="{{ url_for('jobs.create') }}">Add Job</a>
+
+{% if jobs %}
+    <ul>
+    {% for job in jobs %}
+        <li>
+            {{ job.name }} — {{ job.hourly_rate }} {{ job.currency }}
+            {% if not job.is_active %}<em>(inactive)</em>{% endif %}
+            <a href="{{ url_for('jobs.edit', job_id=job.id) }}">Edit</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No jobs yet. <a href="{{ url_for('jobs.create') }}">Add one.</a></p>
+{% endif %}
+{% endblock %}
