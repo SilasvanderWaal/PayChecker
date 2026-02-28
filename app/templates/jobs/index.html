@@ -10,6 +10,7 @@
             {{ job.name }} — {{ job.hourly_rate }} {{ job.currency }}
             {% if not job.is_active %}<em>(inactive)</em>{% endif %}
             <a href="{{ url_for('jobs.edit', job_id=job.id) }}">Edit</a>
+            <a href="{{ url_for('ob_rules.index', job_id=job.id) }}">OB Rules</a>
         </li>
     {% endfor %}
     </ul>

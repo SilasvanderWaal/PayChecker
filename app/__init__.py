@@ -34,7 +34,10 @@ def create_app():
 
     from app.payslips import payslips_bp
     app.register_blueprint(payslips_bp)
-    
+
+    from app.ob_rules import ob_rules_bp
+    app.register_blueprint(ob_rules_bp)
+
 
     from flask import render_template
 

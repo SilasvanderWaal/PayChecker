@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }} — {{ job.name }}</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.period.label }} {{ form.period() }}
+    </div>
+    <div>
+        {{ form.start_hour.label }}
+        {{ form.start_hour() }} : {{ form.start_minute() }}
+    </div>
+    <div>
+        {{ form.end_hour.label }}
+        {{ form.end_hour() }} : {{ form.end_minute() }}
+    </div>
+    <div>
+        {{ form.percentage.label }} {{ form.percentage() }}
+    </div>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('ob_rules.index', job_id=job.id) }}">Cancel</a>
+{% endblock %}

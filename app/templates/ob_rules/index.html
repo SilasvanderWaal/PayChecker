@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>OB Rules — {{ job.name }}</h2>
+<a href="{{ url_for('ob_rules.create', job_id=job.id) }}">Add Rule</a>
+<a href="{{ url_for('jobs.index') }}">Back to Jobs</a>
+
+{% if rules %}
+    <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Supplement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rule in rules %}
+            <tr>
+                <td>{{ rule.period.replace("_", " ").title() }}</td>
+                <td>{{ "%02d:%02d"|format(rule.start_hour, rule.start_minute) }}</td>
+                <td>{{ "%02d:%02d"|format(rule.end_hour, rule.end_minute) }}</td>
+                <td>{{ rule.percentage }}%</td>
+                <td>
+                    <form method="POST"
+                          action="{{ url_for('ob_rules.delete', job_id=job.id, rule_id=rule.id) }}"
+                          style="display:inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No OB rules yet.</p>
+{% endif %}
+{% endblock %}

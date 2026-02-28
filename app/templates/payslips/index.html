@@ -20,6 +20,8 @@
                 <th>Hours</th>
                 <th>Rate (SEK)</th>
                 <th>Gross (SEK)</th>
+                <th>OB Supplement (SEK)</th>
+                <th>Total (SEK)</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +31,8 @@
                 <td>{{ "%.2f"|format(summary.hours_worked) }}</td>
                 <td>{{ "%.2f"|format(summary.hourly_rate) }}</td>
                 <td>{{ "%.2f"|format(summary.gross) }}</td>
+                <td>{{ "%.2f"|format(summary.ob_supplement) }}</td>
+                <td>{{ "%.2f"|format(summary.total) }}</td>
             </tr>
         {% endfor %}
         </tbody>
