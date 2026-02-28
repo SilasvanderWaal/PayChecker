@@ -1,6 +1,7 @@
 from app.extensions import db
 from app.models.shift import Shift
 from app.models.job import Job
+from app.shifts.ics_parser import parse_ics, ShiftCandidate
 
 def get_user_shifts(user_id: int):
     """Return all shifts for a user, most recent first."""
@@ -51,3 +52,37 @@ def get_shift_or_404(shift_id: int, user_id: int) -> Shift:
 def get_active_jobs_for_user(user_id: int):
     """Return active jobs as choices for the shift form."""
     return Job.query.filter_by(user_id=user_id, is_active=True).all()
+
+def import_shifts_from_ics(file_bytes: bytes, user_id: int, job_id: int) -> dict:
+    candidates = parse_ics(file_bytes)
+    created = 0
+    updated = 0
+
+    for candidate in candidates:
+        existing = Shift.query.filter_by(
+            user_id=user_id,
+            ics_uid=candidate.unique_key
+        ).first()
+
+        if existing:
+            existing.start_time = candidate.start_time
+            existing.end_time = candidate.end_time
+            existing.notes = candidate.notes
+            existing.job_id = job_id
+            updated += 1
+        else:
+            shift = Shift(
+                user_id=user_id,
+                job_id=job_id,
+                start_time=candidate.start_time,
+                end_time=candidate.end_time,
+                notes=candidate.notes,
+                source="ics",
+                ics_uid=candidate.unique_key,
+                break_duration=0
+            )
+            db.session.add(shift)
+            created += 1
+
+    db.session.commit()
+    return {"created": created, "updated": updated}

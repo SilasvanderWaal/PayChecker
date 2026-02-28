@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Import ICS Calendar</h2>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.job_id.label }} {{ form.job_id() }}
+    </div>
+    <div>
+        {{ form.ics_file.label }} {{ form.ics_file() }}
+    </div>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('shifts.index') }}">Cancel</a>
+{% endblock %}

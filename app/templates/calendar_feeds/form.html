@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.name.label }} {{ form.name() }}
+    </div>
+    <div>
+        {{ form.url.label }} {{ form.url() }}
+    </div>
+    <div>
+        {{ form.job_id.label }} {{ form.job_id() }}
+    </div>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('calendar_feeds.index') }}">Cancel</a>
+{% endblock %}

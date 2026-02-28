@@ -29,6 +29,9 @@ def create_app():
     from app.shifts import shifts_bp
     app.register_blueprint(shifts_bp)
 
+    from app.calendar_feeds import calendar_feeds_bp
+    app.register_blueprint(calendar_feeds_bp)
+
     from flask import render_template
 
     @app.route("/")

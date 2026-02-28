@@ -2,6 +2,7 @@
 {% block content %}
 <h2>My Shifts</h2>
 <a href="{{ url_for('shifts.create') }}">Add Shift</a>
+<a href="{{ url_for('shifts.ics_import') }}">Import ICS</a>
 
 {% if shifts %}
     <table>

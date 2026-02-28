@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Calendar Feeds</h2>
+<a href="{{ url_for('calendar_feeds.create') }}">Add Feed</a>
+
+{% if feeds %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Job</th>
+                <th>Last Synced</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feed in feeds %}
+            <tr>
+                <td>{{ feed.name }}</td>
+                <td>{{ feed.job.name }}</td>
+                <td>{{ feed.last_synced_at.strftime("%d %b %Y %H:%M") if feed.last_synced_at else "Never" }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('calendar_feeds.sync', feed_id=feed.id) }}"
+                          style="display:inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">Sync Now</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('calendar_feeds.delete', feed_id=feed.id) }}"
+                          style="display:inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No feeds yet. <a href="{{ url_for('calendar_feeds.create') }}">Add one.</a></p>
+{% endif %}
+{% endblock %}
