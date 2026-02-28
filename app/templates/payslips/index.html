@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Payslip Estimator</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.year.label }} {{ form.year() }}
+    {{ form.month.label }} {{ form.month() }}
+    {{ form.submit() }}
+</form>
+
+{% if payslip %}
+    <h3>{{ payslip.month_name }}</h3>
+
+    <h4>Hours Worked</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Job</th>
+                <th>Hours</th>
+                <th>Rate (SEK)</th>
+                <th>Gross (SEK)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for summary in payslip.job_summaries %}
+            <tr>
+                <td>{{ summary.job_name }}</td>
+                <td>{{ "%.2f"|format(summary.hours_worked) }}</td>
+                <td>{{ "%.2f"|format(summary.hourly_rate) }}</td>
+                <td>{{ "%.2f"|format(summary.gross) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>Tax Breakdown</h4>
+    <table>
+        <tr><td>Gross Income</td><td>{{ "%.2f"|format(payslip.total_gross) }} SEK</td></tr>
+        <tr><td>Grundavdrag</td><td>{{ "%.2f"|format(payslip.breakdown.grundavdrag) }} SEK</td></tr>
+        <tr><td>Taxable Income</td><td>{{ "%.2f"|format(payslip.breakdown.taxable_income) }} SEK</td></tr>
+        <tr><td>Municipal Tax ({{ payslip.breakdown.municipal_rate }})</td>
+            <td>{{ "%.2f"|format(payslip.municipal_tax) }} SEK</td></tr>
+        {% if payslip.state_tax > 0 %}
+        <tr><td>State Tax (20%)</td><td>{{ "%.2f"|format(payslip.state_tax) }} SEK</td></tr>
+        {% endif %}
+        <tr><td><strong>Total Tax</strong></td><td><strong>{{ "%.2f"|format(payslip.total_tax) }} SEK</strong></td></tr>
+        <tr><td><strong>Net Pay</strong></td><td><strong>{{ "%.2f"|format(payslip.net) }} SEK</strong></td></tr>
+    </table>
+
+    {% if payslip.job_summaries|length == 0 %}
+        <p>No shifts recorded for this month.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

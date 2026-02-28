@@ -32,6 +32,10 @@ def create_app():
     from app.calendar_feeds import calendar_feeds_bp
     app.register_blueprint(calendar_feeds_bp)
 
+    from app.payslips import payslips_bp
+    app.register_blueprint(payslips_bp)
+    
+
     from flask import render_template
 
     @app.route("/")

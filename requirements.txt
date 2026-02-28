@@ -11,3 +11,4 @@ recurring-ical-events==3.1.0
 cryptography==42.0.8
 email_validator
 requests==2.31.0
+workalendar==17.0.0
