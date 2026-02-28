@@ -9,12 +9,17 @@ services:
       FLASK_ENV: ${FLASK_ENV}
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app:z
     depends_on:
       db:
         condition: service_healthy
         restart: true
+    develop:
+          watch:
+            - action: sync
+              path: ./app
+              target: /app/app
+            - action: rebuild
+              path: requirements.txt
 
   db:
     image: mysql:8.0
