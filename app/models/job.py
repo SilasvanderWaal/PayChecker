@@ -13,7 +13,7 @@ class Job(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    #shifts = db.relationship("Shift", backref="job", lazy=True)
+    shifts = db.relationship("Shift", backref="job", lazy=True)
 
     def __repr__(self):
         return f"<Job {self.name}>"

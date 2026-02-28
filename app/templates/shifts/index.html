@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Shifts</h2>
+<a href="{{ url_for('shifts.create') }}">Add Shift</a>
+
+{% if shifts %}
+    <table>
+        <thead>
+            <tr>
+                <th>Job</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Break</th>
+                <th>Hours</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for shift in shifts %}
+            <tr>
+                <td>{{ shift.job.name }}</td>
+                <td>{{ shift.start_time.strftime("%d %b %Y %H:%M") }}</td>
+                <td>{{ shift.end_time.strftime("%d %b %Y %H:%M") }}</td>
+                <td>{{ shift.break_duration }}
+                <td>{{ "%.2f"|format(shift.duration_hours) }}</td>
+                <td>{{ shift.notes or "—" }}</td>
+                <td>
+                    <a href="{{ url_for('shifts.edit', shift_id=shift.id) }}">Edit</a>
+                    <form method="POST" action="{{ url_for('shifts.delete', shift_id=shift.id) }}"
+                          style="display:inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No shifts yet. <a href="{{ url_for('shifts.create') }}">Add one.</a></p>
+{% endif %}
+{% endblock %}

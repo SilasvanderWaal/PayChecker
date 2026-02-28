@@ -26,6 +26,9 @@ def create_app():
     from app.jobs import jobs_bp
     app.register_blueprint(jobs_bp)
 
+    from app.shifts import shifts_bp
+    app.register_blueprint(shifts_bp)
+
     from flask import render_template
 
     @app.route("/")
