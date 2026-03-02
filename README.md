@@ -22,7 +22,6 @@ Coming Soon!
 - **OB supplement (obekväm arbetstid)** — Define custom OB rules per job with user-defined time windows and percentage bonuses for evenings, nights, weekends, and public holidays
 - **Payslip estimation** — Monthly payslip calculator with full Swedish tax breakdown including grundavdrag, municipal tax, state tax, and OB supplements
 - **Swedish public holidays** — Automatically recognised via `workalendar`
-- **Responsive UI** — Bootstrap 5 with system default light/dark theme
 
 ---
 
