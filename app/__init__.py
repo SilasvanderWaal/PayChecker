@@ -40,4 +40,10 @@ def create_app():
     from app.dashboard import dashboard_bp
     flask_app.register_blueprint(dashboard_bp)
 
+    from app.scheduler import init_scheduler
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    if not os.environ.get("WERKZEUG_RUN_MAIN"):
+        init_scheduler(flask_app)
+
     return flask_app
