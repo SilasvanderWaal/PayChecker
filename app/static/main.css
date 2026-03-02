@@ -1,0 +1,21 @@
+.sidebar {
+    min-height: 100vh;
+    border-right: 1px solid var(--bs-border-color);
+}
+
+.nav-link {
+    color: var(--bs-body-color);
+    border-radius: 0.375rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: var(--bs-secondary-bg);
+    color: var(--bs-emphasis-color);
+}
+
+.stat-card {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    background-color: var(--bs-secondary-bg);
+}

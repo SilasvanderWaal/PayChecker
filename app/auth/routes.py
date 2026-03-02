@@ -25,7 +25,7 @@ def login():
         user = authenticate_user(form.email.data, form.password.data)
         if user:
             login_user(user)
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard.index"))
         flash("Invalid email or password.", "danger")
     return render_template("auth/login.html", form=form)
 

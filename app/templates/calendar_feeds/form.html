@@ -1,18 +1,30 @@
 {% extends "base.html" %}
+{% block title %}{{ title }} — PayCheck{% endblock %}
 {% block content %}
-<h2>{{ title }}</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.name.label }} {{ form.name() }}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h4 class="mb-4">{{ title }}</h4>
+        <div class="card">
+            <div class="card-body p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.url.label(class="form-label") }}
+                        {{ form.url(class="form-control", placeholder="https://...") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.job_id.label(class="form-label") }}
+                        {{ form.job_id(class="form-select") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('calendar_feeds.index') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-        {{ form.url.label }} {{ form.url() }}
-    </div>
-    <div>
-        {{ form.job_id.label }} {{ form.job_id() }}
-    </div>
-    {{ form.submit() }}
-</form>
-<a href="{{ url_for('calendar_feeds.index') }}">Cancel</a>
+</div>
 {% endblock %}

@@ -1,3 +1,7 @@
+### Key principles
+
+* Routes handle only http concerns. All buisness logic lives in services.py 
+* Timezone rule: always store UTC in db, convert to user timezone at display time. iclander events carry tzinfo - normalise with pytz or zoneinfo
 
 ### DB Schema
 

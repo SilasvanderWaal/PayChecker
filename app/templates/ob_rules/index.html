@@ -1,40 +1,52 @@
 {% extends "base.html" %}
+{% block title %}OB Rules — PayCheck{% endblock %}
 {% block content %}
-<h2>OB Rules — {{ job.name }}</h2>
-<a href="{{ url_for('ob_rules.create', job_id=job.id) }}">Add Rule</a>
-<a href="{{ url_for('jobs.index') }}">Back to Jobs</a>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0">OB Rules</h4>
+        <span class="text-muted small">{{ job.name }}</span>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('jobs.index') }}" class="btn btn-outline-secondary">Back to Jobs</a>
+        <a href="{{ url_for('ob_rules.create', job_id=job.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add Rule
+        </a>
+    </div>
+</div>
 {% if rules %}
-    <table>
-        <thead>
-            <tr>
-                <th>Period</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Supplement</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for rule in rules %}
-            <tr>
-                <td>{{ rule.period.replace("_", " ").title() }}</td>
-                <td>{{ "%02d:%02d"|format(rule.start_hour, rule.start_minute) }}</td>
-                <td>{{ "%02d:%02d"|format(rule.end_hour, rule.end_minute) }}</td>
-                <td>{{ rule.percentage }}%</td>
-                <td>
-                    <form method="POST"
-                          action="{{ url_for('ob_rules.delete', job_id=job.id, rule_id=rule.id) }}"
-                          style="display:inline">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Supplement</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for rule in rules %}
+                    <tr>
+                        <td>{{ rule.period.replace("_", " ").title() }}</td>
+                        <td>{{ "%02d:%02d"|format(rule.start_hour, rule.start_minute) }}</td>
+                        <td>{{ "%02d:%02d"|format(rule.end_hour, rule.end_minute) }}</td>
+                        <td>{{ rule.percentage }}%</td>
+                        <td class="text-end">
+                            <form method="POST"
+                                  action="{{ url_for('ob_rules.delete', job_id=job.id, rule_id=rule.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% else %}
-    <p>No OB rules yet.</p>
+    <p class="text-muted">No OB rules yet.</p>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — PayCheck{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Dashboard</h4>
+    <span class="text-muted">{{ current_month }}</span>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-muted small mb-1">Hours This Month</div>
+            <div class="fs-3 fw-bold">{{ hours_this_month }}</div>
+            <div class="text-muted small">hours worked</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-muted small mb-1">Estimated Gross</div>
+            <div class="fs-3 fw-bold">{{ "%.0f"|format(payslip.total_gross) }} SEK</div>
+            <div class="text-muted small">before tax</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="text-muted small mb-1">Estimated Net</div>
+            <div class="fs-3 fw-bold text-success">{{ "%.0f"|format(payslip.net) }} SEK</div>
+            <div class="text-muted small">after tax</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick links -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h6 class="text-muted text-uppercase small mb-3">Quick Actions</h6>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ url_for('shifts.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add Shift
+            </a>
+            <a href="{{ url_for('shifts.ics_import') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-file-earmark-arrow-up"></i> Import ICS
+            </a>
+            <a href="{{ url_for('calendar_feeds.create') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-calendar-plus"></i> Add Calendar Feed
+            </a>
+            <a href="{{ url_for('payslips.index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-receipt"></i> View Payslip
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming shifts -->
+<div class="row">
+    <div class="col-12">
+        <h6 class="text-muted text-uppercase small mb-3">Upcoming Shifts (Next 14 Days)</h6>
+        {% if upcoming_shifts %}
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                {% for shift in upcoming_shifts %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-semibold">{{ shift.job.name }}</span>
+                            <span class="text-muted ms-2 small">
+                                {{ shift.start_time.strftime("%a %d %b") }}
+                                {{ shift.start_time.strftime("%H:%M") }}–{{ shift.end_time.strftime("%H:%M") }}
+                            </span>
+                        </div>
+                        <span class="badge bg-secondary">{{ "%.1f"|format(shift.duration_hours) }}h</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="text-muted">No upcoming shifts in the next 14 days.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,20 +1,35 @@
 {% extends "base.html" %}
+{% block title %}Jobs — PayCheck{% endblock %}
 {% block content %}
-<h2>My Jobs</h2>
-<a href="{{ url_for('jobs.create') }}">Add Job</a>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Jobs</h4>
+    <a href="{{ url_for('jobs.create') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Job
+    </a>
+</div>
 {% if jobs %}
-    <ul>
-    {% for job in jobs %}
-        <li>
-            {{ job.name }} — {{ job.hourly_rate }} {{ job.currency }}
-            {% if not job.is_active %}<em>(inactive)</em>{% endif %}
-            <a href="{{ url_for('jobs.edit', job_id=job.id) }}">Edit</a>
-            <a href="{{ url_for('ob_rules.index', job_id=job.id) }}">OB Rules</a>
-        </li>
-    {% endfor %}
-    </ul>
+    <div class="card">
+        <ul class="list-group list-group-flush">
+        {% for job in jobs %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-semibold">{{ job.name }}</span>
+                    <span class="text-muted ms-2">{{ job.hourly_rate }} {{ job.currency }}/h</span>
+                    {% if not job.is_active %}
+                        <span class="badge bg-secondary ms-2">Inactive</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('ob_rules.index', job_id=job.id) }}"
+                       class="btn btn-sm btn-outline-secondary">OB Rules</a>
+                    <a href="{{ url_for('jobs.edit', job_id=job.id) }}"
+                       class="btn btn-sm btn-outline-primary">Edit</a>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
 {% else %}
-    <p>No jobs yet. <a href="{{ url_for('jobs.create') }}">Add one.</a></p>
+    <p class="text-muted">No jobs yet. <a href="{{ url_for('jobs.create') }}">Add one.</a></p>
 {% endif %}
 {% endblock %}

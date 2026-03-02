@@ -1,59 +1,100 @@
 {% extends "base.html" %}
+{% block title %}Payslip — PayCheck{% endblock %}
 {% block content %}
-<h2>Payslip Estimator</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Payslip Estimator</h4>
+</div>
 
-<form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.year.label }} {{ form.year() }}
-    {{ form.month.label }} {{ form.month() }}
-    {{ form.submit() }}
-</form>
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST" class="row g-3 align-items-end">
+            {{ form.hidden_tag() }}
+            <div class="col-auto">
+                {{ form.year.label(class="form-label") }}
+                {{ form.year(class="form-select") }}
+            </div>
+            <div class="col-auto">
+                {{ form.month.label(class="form-label") }}
+                {{ form.month(class="form-select") }}
+            </div>
+            <div class="col-auto">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
 
 {% if payslip %}
-    <h3>{{ payslip.month_name }}</h3>
+    <h5 class="mb-3">{{ payslip.month_name }}</h5>
 
-    <h4>Hours Worked</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Job</th>
-                <th>Hours</th>
-                <th>Rate (SEK)</th>
-                <th>Gross (SEK)</th>
-                <th>OB Supplement (SEK)</th>
-                <th>Total (SEK)</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for summary in payslip.job_summaries %}
-            <tr>
-                <td>{{ summary.job_name }}</td>
-                <td>{{ "%.2f"|format(summary.hours_worked) }}</td>
-                <td>{{ "%.2f"|format(summary.hourly_rate) }}</td>
-                <td>{{ "%.2f"|format(summary.gross) }}</td>
-                <td>{{ "%.2f"|format(summary.ob_supplement) }}</td>
-                <td>{{ "%.2f"|format(summary.total) }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% if payslip.job_summaries %}
+        <div class="card mb-4">
+            <div class="card-header">Hours & Earnings</div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Hours</th>
+                            <th>Rate (SEK)</th>
+                            <th>Gross (SEK)</th>
+                            <th>OB Supplement (SEK)</th>
+                            <th>Total (SEK)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for summary in payslip.job_summaries %}
+                        <tr>
+                            <td>{{ summary.job_name }}</td>
+                            <td>{{ "%.2f"|format(summary.hours_worked) }}</td>
+                            <td>{{ "%.2f"|format(summary.hourly_rate) }}</td>
+                            <td>{{ "%.2f"|format(summary.gross) }}</td>
+                            <td>{{ "%.2f"|format(summary.ob_supplement) }}</td>
+                            <td class="fw-semibold">{{ "%.2f"|format(summary.total) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <h4>Tax Breakdown</h4>
-    <table>
-        <tr><td>Gross Income</td><td>{{ "%.2f"|format(payslip.total_gross) }} SEK</td></tr>
-        <tr><td>Grundavdrag</td><td>{{ "%.2f"|format(payslip.breakdown.grundavdrag) }} SEK</td></tr>
-        <tr><td>Taxable Income</td><td>{{ "%.2f"|format(payslip.breakdown.taxable_income) }} SEK</td></tr>
-        <tr><td>Municipal Tax ({{ payslip.breakdown.municipal_rate }})</td>
-            <td>{{ "%.2f"|format(payslip.municipal_tax) }} SEK</td></tr>
-        {% if payslip.state_tax > 0 %}
-        <tr><td>State Tax (20%)</td><td>{{ "%.2f"|format(payslip.state_tax) }} SEK</td></tr>
-        {% endif %}
-        <tr><td><strong>Total Tax</strong></td><td><strong>{{ "%.2f"|format(payslip.total_tax) }} SEK</strong></td></tr>
-        <tr><td><strong>Net Pay</strong></td><td><strong>{{ "%.2f"|format(payslip.net) }} SEK</strong></td></tr>
-    </table>
-
-    {% if payslip.job_summaries|length == 0 %}
-        <p>No shifts recorded for this month.</p>
+        <div class="card">
+            <div class="card-header">Tax Breakdown</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Gross Income</span>
+                    <span>{{ "%.2f"|format(payslip.total_gross) }} SEK</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between text-muted">
+                    <span>Grundavdrag</span>
+                    <span>— {{ "%.2f"|format(payslip.breakdown.grundavdrag) }} SEK</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between text-muted">
+                    <span>Taxable Income</span>
+                    <span>{{ "%.2f"|format(payslip.breakdown.taxable_income) }} SEK</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Municipal Tax ({{ payslip.breakdown.municipal_rate }})</span>
+                    <span>— {{ "%.2f"|format(payslip.municipal_tax) }} SEK</span>
+                </li>
+                {% if payslip.state_tax > 0 %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>State Tax (20%)</span>
+                    <span>— {{ "%.2f"|format(payslip.state_tax) }} SEK</span>
+                </li>
+                {% endif %}
+                <li class="list-group-item d-flex justify-content-between fw-bold">
+                    <span>Total Tax</span>
+                    <span>— {{ "%.2f"|format(payslip.total_tax) }} SEK</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between fw-bold text-success fs-5">
+                    <span>Net Pay</span>
+                    <span>{{ "%.2f"|format(payslip.net) }} SEK</span>
+                </li>
+            </ul>
+        </div>
+    {% else %}
+        <p class="text-muted">No shifts recorded for this month.</p>
     {% endif %}
 {% endif %}
 {% endblock %}
